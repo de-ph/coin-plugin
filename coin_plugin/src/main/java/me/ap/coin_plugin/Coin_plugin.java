@@ -5,23 +5,35 @@ import com.fren_gor.ultimateAdvancementAPI.UltimateAdvancementAPI;
 import com.fren_gor.ultimateAdvancementAPI.advancement.RootAdvancement;
 import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementDisplay;
 import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementFrameType;
+import com.fren_gor.ultimateAdvancementAPI.events.PlayerLoadingCompletedEvent;
 import com.fren_gor.ultimateAdvancementAPI.util.AdvancementKey;
 import com.fren_gor.ultimateAdvancementAPI.util.CoordAdapter;
 import me.ap.coin_plugin.advs.AdvancementTabNamespaces;
 import me.ap.coin_plugin.advs.bal.*;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public final class Coin_plugin extends JavaPlugin {
+public final class Coin_plugin extends JavaPlugin implements Listener {
 
     @Override
     public void onEnable() {
+        Bukkit.getPluginManager().registerEvents(this,this);
         initializeTabs();
     }
 
     @Override
     public void onDisable() {
         // Plugin shutdown logic
+    }
+
+    @EventHandler
+    public void onJoin(PlayerLoadingCompletedEvent e){
+        Player p = e.getPlayer();
+        bal.showTab(p);
     }
 
     public static UltimateAdvancementAPI api;
@@ -52,5 +64,6 @@ public final class Coin_plugin extends JavaPlugin {
         Bronze_coin_d bronze_coin_d = new Bronze_coin_d(silver_coin_d,adapterbal.getX(Bronze_coin_d.KEY), adapterbal.getY(Bronze_coin_d.KEY));
         Bronze_coins_d bronze_coins_d = new Bronze_coins_d(silver_coin_d,adapterbal.getX(Bronze_coins_d.KEY), adapterbal.getY(Bronze_coins_d.KEY));
         bal.registerAdvancements(balance ,deposit ,withdraw ,platinum_coin_d ,platinum_coins_d ,platinum_coin_w ,platinum_coins_w ,gold_coins_d ,gold_coin_d ,silver_coins_w ,silver_coin_w ,bronze_coins_w ,bronze_coin_w ,gold_coin_w ,gold_coins_w ,silver_coin_d ,silver_coins_d ,bronze_coin_d ,bronze_coins_d );
+        bal.automaticallyGrantRootAdvancement();
     }
 }
